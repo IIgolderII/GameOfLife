@@ -10,20 +10,115 @@
             margin: 0;
             height: 100vh;
             overflow: hidden;
+            padding-right: 300px;
+            background-color: black;
+        }
+        
+        @media only screen and (max-width: 800px) {
+            body {
+                padding-right: 2rem;
+            }
         }
 
-        canvas {
+        #gameOfLife {
             position: relative;
             width: 100%;
             height: 100%;
             object-fit: contain;
-            background-color: black;
+        }
+
+        #models {
+            transition: all .3s ease-in-out;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: #fff;
+            opacity: .8;
+            padding: .5rem 2rem;
+            border-radius: 1rem;
+            max-height: calc(100% - 2rem);
+            overflow: auto;
+        }
+
+        @media only screen and (max-width: 800px) {
+            #models:not(.active) {
+                transform: translateX(calc(100% - 1rem));
+            }
+        }
+
+        #models .list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #models .list .item {
+            transition: all .1s ease-in-out;
+            cursor: pointer;
+            padding: .5rem;
+            padding-right: 1rem;
+        }
+
+        #models .list .item:hover {
+            padding-left: 1rem;
+            padding-right: .5rem;
         }
     </style>
 </head>
 
 <body>
     <canvas id="gameOfLife"></canvas>
+    <div id="models" class="active">
+        <h2>Select a model</h2>
+        <div class="list">
+            Still lifes :
+            <div class="item" data-name="Block">
+                Block
+            </div>
+            <div class="item" data-name="Bee-hive">
+                Bee-hive
+            </div>
+            <div class="item" data-name="Loaf">
+                Loaf
+            </div>
+            <div class="item" data-name="Boat">
+                Boat
+            </div>
+            <div class="item" data-name="Tub">
+                Tub
+            </div>
+            <br>
+            Oscillators :
+            <div class="item" data-name="Blinker">
+                Blinker
+            </div>
+            <div class="item" data-name="Toad">
+                Toad
+            </div>
+            <div class="item" data-name="Beacon">
+                Beacon
+            </div>
+            <div class="item" data-name="Pulsar">
+                Pulsar
+            </div>
+            <div class="item" data-name="Penta-decathlon">
+                Penta-decathlon
+            </div>
+            <br>
+            Spaceships :
+            <div class="item" data-name="Glider">
+                Glider
+            </div>
+            <div class="item" data-name="Light-weight spaceship">
+                Light-weight spaceship
+            </div>
+            <div class="item" data-name="Middle-weight spaceship">
+                Middle-weight spaceship
+            </div>
+            <div class="item" data-name="Heavy-weight spaceship">
+                Heavy-weight spaceship
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 
