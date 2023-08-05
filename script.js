@@ -3,16 +3,20 @@ canvas.width = 500;
 canvas.height = 500;
 var ctx = canvas.getContext("2d");
 
-let arrayLength = 20;
+let arrayLength = 30;
+let tileWidth = canvas.height / arrayLength;
 let tab = Array.from({ length: arrayLength }, () =>
     Array.from({ length: arrayLength }, () => 0)
 ); // full of 0
 
-const tileWidth = canvas.height / arrayLength;
+let rate = 1;
 
 let game;
 
 const models = {
+    "Empty": [
+        [0],
+    ],
     "Block": [
         [1, 1],
         [1, 1],
@@ -107,19 +111,17 @@ const models = {
     ],
 }
 
-document.querySelector('#models').addEventListener('click', () => {
-    document.querySelector('#models').classList.toggle("active");
+document.querySelector('#sidebar').addEventListener('click', () => {
+    document.querySelector('#sidebar').classList.toggle("active");
 });
 
 Array.from(document.querySelectorAll('#models .list .item')).forEach(element => {
     element.addEventListener('click', () => {
-        clearInterval(game);
+        stop()
 
         if (!models[element.dataset.name]) {
             return;
         }
-
-        // document.querySelector('#models').classList.remove("active");
 
         let model = models[element.dataset.name];
 
@@ -128,7 +130,7 @@ Array.from(document.querySelectorAll('#models .list .item')).forEach(element => 
 
         tab = Array.from({ length: arrayLength }, () =>
             Array.from({ length: arrayLength }, () => 0)
-        ); // full of false
+        ); // full of 0
 
         for (let i = 0; i < model.length; i++) {
             for (let j = 0; j < model[i].length; j++) {
@@ -137,20 +139,66 @@ Array.from(document.querySelectorAll('#models .list .item')).forEach(element => 
         }
 
         draw();
-
-        game = setInterval(() => {
-            update();
-            draw();
-        }, 500);
     });
 })
 
 draw();
 
-// document.addEventListener('click', () => {
-//     update();
-//     draw();
+const playPauseButton = document.querySelector('#controls button.playPause');
+const gridLengthInput = document.querySelector('#controls #gridLength');
+const rateInput = document.querySelector('#controls #rate');
+
+playPauseButton.addEventListener('click', () => {
+    if (playPauseButton.classList.contains('play')) {
+        start();
+    } else {
+        stop();
+    }
+});
+document.querySelector('#controls button.next').addEventListener('click', () => {
+    stop();
+    update();
+    draw();
+});
+gridLengthInput.addEventListener('change', () => {
+    stop();
+    let value = Math.max(gridLengthInput.value, 10);
+    gridLengthInput.value = value;
+    arrayLength = value;
+    tab = Array.from({ length: arrayLength }, () =>
+        Array.from({ length: arrayLength }, () => 0)
+    ); // full of 0
+    tileWidth = canvas.height / arrayLength;
+    draw();
+});
+rateInput.addEventListener('change', () => {
+    let value = Math.max(rateInput.value, .1)
+    rateInput.value = value;
+    rate = value;
+    stop();
+    start();
+});
+
+// canvas.addEventListener('click', (event) => {
+//     console.log(event.offsetX);
 // });
+
+function start() {
+    game = setInterval(() => {
+        update();
+        draw();
+    }, rate * 500);
+    playPauseButton.classList.remove('play');
+    playPauseButton.classList.add('pause');
+}
+
+function stop() {
+    if (game) {
+        clearInterval(game);
+    }
+    playPauseButton.classList.remove('pause');
+    playPauseButton.classList.add('play');
+}
 
 function update() {
     let newTab = Array.from({ length: arrayLength }, () =>

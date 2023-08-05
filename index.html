@@ -13,7 +13,7 @@
             padding-right: 300px;
             background-color: black;
         }
-        
+
         @media only screen and (max-width: 800px) {
             body {
                 padding-right: 2rem;
@@ -27,23 +27,33 @@
             object-fit: contain;
         }
 
-        #models {
+        #sidebar {
             transition: all .3s ease-in-out;
             position: absolute;
             top: 1rem;
             right: 1rem;
-            background-color: #fff;
-            opacity: .8;
-            padding: .5rem 2rem;
-            border-radius: 1rem;
             max-height: calc(100% - 2rem);
-            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
 
         @media only screen and (max-width: 800px) {
-            #models:not(.active) {
+            #sidebar:not(.active) {
                 transform: translateX(calc(100% - 1rem));
             }
+        }
+
+        #models {
+            background-color: #fff;
+            opacity: .8;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            overflow: auto;
+        }
+
+        #models h2 {
+            margin-top: .5rem;
         }
 
         #models .list {
@@ -62,60 +72,140 @@
             padding-left: 1rem;
             padding-right: .5rem;
         }
+
+        #controls {
+            background-color: #fff;
+            opacity: .8;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        #controls input[type=number] {
+            width: 3rem;
+        }
+
+        #controls .buttons {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        #controls button {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            border-radius: 1rem;
+        }
+        
+        #controls button:hover {
+            background-color: #0001;
+        }
+
+        #controls button.playPause svg {
+            display: none;
+        }
+
+        #controls button.playPause.play .playIcon {
+            display: block;
+        }
+
+        #controls button.playPause.pause .pauseIcon {
+            display: block;
+        }
     </style>
 </head>
 
 <body>
     <canvas id="gameOfLife"></canvas>
-    <div id="models" class="active">
-        <h2>Select a model</h2>
-        <div class="list">
-            Still lifes :
-            <div class="item" data-name="Block">
-                Block
+    <div id="sidebar" class="active">
+        <div id="models">
+            <h2>Select a model</h2>
+            <div class="list">
+                <div class="item" data-name="Empty">
+                    Empty
+                </div>
+                <br>
+                Still lifes :
+                <div class="item" data-name="Block">
+                    Block
+                </div>
+                <div class="item" data-name="Bee-hive">
+                    Bee-hive
+                </div>
+                <div class="item" data-name="Loaf">
+                    Loaf
+                </div>
+                <div class="item" data-name="Boat">
+                    Boat
+                </div>
+                <div class="item" data-name="Tub">
+                    Tub
+                </div>
+                <br>
+                Oscillators :
+                <div class="item" data-name="Blinker">
+                    Blinker
+                </div>
+                <div class="item" data-name="Toad">
+                    Toad
+                </div>
+                <div class="item" data-name="Beacon">
+                    Beacon
+                </div>
+                <div class="item" data-name="Pulsar">
+                    Pulsar
+                </div>
+                <div class="item" data-name="Penta-decathlon">
+                    Penta-decathlon
+                </div>
+                <br>
+                Spaceships :
+                <div class="item" data-name="Glider">
+                    Glider
+                </div>
+                <div class="item" data-name="Light-weight spaceship">
+                    Light-weight spaceship
+                </div>
+                <div class="item" data-name="Middle-weight spaceship">
+                    Middle-weight spaceship
+                </div>
+                <div class="item" data-name="Heavy-weight spaceship">
+                    Heavy-weight spaceship
+                </div>
             </div>
-            <div class="item" data-name="Bee-hive">
-                Bee-hive
+        </div>
+        <div id="controls">
+            <div>
+                <label for="gridLength">Grid length : </label>
+                <input type="number" value="30" min="10" step="1" id="gridLength">
             </div>
-            <div class="item" data-name="Loaf">
-                Loaf
+            <div>
+                <label for="rate">Rate : </label>
+                <input type="number" value="1" min="0,1" step=".1" id="rate">
             </div>
-            <div class="item" data-name="Boat">
-                Boat
-            </div>
-            <div class="item" data-name="Tub">
-                Tub
-            </div>
-            <br>
-            Oscillators :
-            <div class="item" data-name="Blinker">
-                Blinker
-            </div>
-            <div class="item" data-name="Toad">
-                Toad
-            </div>
-            <div class="item" data-name="Beacon">
-                Beacon
-            </div>
-            <div class="item" data-name="Pulsar">
-                Pulsar
-            </div>
-            <div class="item" data-name="Penta-decathlon">
-                Penta-decathlon
-            </div>
-            <br>
-            Spaceships :
-            <div class="item" data-name="Glider">
-                Glider
-            </div>
-            <div class="item" data-name="Light-weight spaceship">
-                Light-weight spaceship
-            </div>
-            <div class="item" data-name="Middle-weight spaceship">
-                Middle-weight spaceship
-            </div>
-            <div class="item" data-name="Heavy-weight spaceship">
-                Heavy-weight spaceship
+            <div class="buttons">
+                <button class="playPause play" title="play/pause">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="playIcon icon icon-tabler icon-tabler-player-play-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="pauseIcon icon icon-tabler icon-tabler-player-pause-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="currentColor" />
+                        <path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                </button>
+                <button class="next" title="next">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-player-skip-forward-filled" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                        <path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z" stroke-width="0" fill="currentColor" />
+                        <path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z" stroke-width="0" fill="currentColor" />
+                    </svg>
+                </button>
             </div>
         </div>
     </div>
